@@ -29,7 +29,7 @@ class AppController extends ActionController {
 		$configuration = ConfigurationService::create()->getConfiguration($identifier);
 
 		if ($identifier === NULL || $configuration === NULL) {
-			//$this->redirect('invalid');
+			$this->redirect('invalid');
 		}
 
 		$this->view->assign('configuration', $configuration);
