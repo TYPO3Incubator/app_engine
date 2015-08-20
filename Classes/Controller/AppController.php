@@ -20,23 +20,29 @@ use TYPO3Incubator\AppEngine\Service\ConfigurationService;
 
 class AppController extends ActionController {
 
+	protected function initializeAction() {
+		$this->settings['configuration'] = $this->getCurrentConfiguration();
+	}
+
 	public function indexAction() {
 
 	}
 
 	public function dispatchAction() {
-		$identifier = $this->getCurrentIdentifier();
-		$configuration = ConfigurationService::create()->getConfiguration($identifier);
+		$configuration = $this->getCurrentConfiguration();
 
-		if ($identifier === NULL || $configuration === NULL) {
+		if ($configuration === NULL) {
 			$this->redirect('invalid');
 		}
-
-		$this->view->assign('configuration', $configuration);
 	}
 
 	public function invalidAction() {
 
+	}
+
+	protected function getCurrentConfiguration() {
+		$identifier = $this->getCurrentIdentifier();
+		return ConfigurationService::create()->getConfiguration($identifier);
 	}
 
 	protected function getCurrentIdentifier() {

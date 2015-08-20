@@ -42,6 +42,7 @@ class Configuration {
 		$configuration->setFileName($fileName);
 		$configuration->setIdentifier($identifier);
 		$configuration->setData($data);
+
 		return $configuration;
 	}
 
