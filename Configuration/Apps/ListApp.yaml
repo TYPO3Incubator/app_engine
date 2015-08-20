@@ -1,0 +1,105 @@
+# TYPO3 Backned App Configuration of ListApp
+---
+app:
+  package: 'TYPO3Incubator/AppEngine'
+  name: 'ListApp'
+  #parentModule: "apps"
+  templateFile: 'EXT:app_engine/Resources/Private/Templates/Apps/BaseApp/Layout.html'
+
+components:
+  headerMenu:
+    settings:
+      showAppSettings: true
+      appSettingsTemplateFile: 'EXT:app_engine/Resources/Private/Partials/Apps/ListApp/Settings.html'
+      showHelp: true
+      helpTemplateFile: 'EXT:app_engine/Resources/Private/Partials/Apps/ListApp/Help.html'
+
+  # or topGroup: false
+  topGroup:
+      settings:
+        collapseAll: true
+      components:
+        -
+          component: 'presets'
+          settings:
+            # See TCA... possibly...
+            selectors:
+              category:
+                label: 'EXT:app_engine/Resources/Private/Language/BaseApp.xlf:presets.category'
+                fields:
+                  - 'tx_eventmanager_domain_model_event.categories'
+                type: 'select'
+              band:
+                label: 'EXT:app_engine/Resources/Language/BaseApp.xlf:perspectives.band'
+                fields:
+                  - 'tx_eventmanager_domain_model_event.band'
+                type: 'select'
+              year:
+                label: 'EXT:app_engine/Resources/Language/BaseApp.xlf:perspectives.year'
+                provider: 'AndreasSteiger\\EventManager\\AppController\\DataProvider->getEventYears'
+                type: 'select'
+
+  asideGroup: false
+
+  filter:
+    settings:
+      pageFilter: true
+      smartFilter:
+          eventDate:
+            multipleSelect: true
+            label: 'EXT:app_engine/Resources/Language/BaseApp.xlf:filter.date'
+            type: 'date'
+            interceptor: 'AndreasSteiger\\EventManager\\AppConstraints\\Constraint->addMonthConstraint'
+            addConstraints:
+              lastMonth:
+                label: 'EXT:app_engine/Resources/Language/BaseApp.xlf:filter.month.last'
+                type: 'dynamic'
+                provider: 'AndreasSteiger\\EventManager\\AppController\\DataProvider->getLastMonth'
+              lastTwoMonths:
+                label: 'EXT:app_engine/Resources/Language/BaseApp.xlf:filter.month.lasttwomonths'
+                type: 'dynamic'
+                provider: 'AndreasSteiger\\EventManager\\AppController\\DataProvider->getLastTwoMonths'
+              day:
+                label: 'EXT:app_engine/Resources/Language/BaseApp.xlf:filter.day'
+                type: 'input'
+                widget: 'datepicker'
+                provider: ''
+              period:
+                label: 'EXT:app_engine/Resources/Language/BaseApp.xlf:filter.period'
+                type: 'input'
+                widget: 'rangeSlider'
+                provider: ''
+          state:
+            multipleSelect: false
+            label: 'EXT:app_engine/Resources/Language/BaseApp.xlf:filter.date'
+            interceptor: 'AndreasSteiger\\EventManager\\AppConstraints\\Constraint->addStateConstraint'
+            constraints:
+              cancled:
+                label: 'EXT:app_engine/Resources/Language/BaseApp.xlf:filter.state'
+                provider: 'AndreasSteiger\\EventManager\\AppController\\DataProvider->getLastMonth'
+          creator: true
+          creationDate: true
+          category: true
+
+  result:
+    type: 'show'
+    settings:
+      defaultView: 'list'
+      views:
+        list:
+          templateFile: 'EXT:app_engine/Resources/Private/Partials/Apps/ListApp/Result/List.html'
+          iconFile: 'EXT:app_engine/Resources/Public/Icons/Apps/ListApp/List.svg'
+
+          behavior:
+            allowMassAction: false
+            allowColumnSelection: false
+            maximumColumns: 20
+            maximumElementsPerPage: 25
+            usePresetsComponent: true
+
+        calendar: true
+        # settings: usePresetsComponent?
+
+        tiles: true
+
+        coverFlow: false
